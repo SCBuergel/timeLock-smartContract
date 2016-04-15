@@ -1,4 +1,4 @@
-# timeLock-smartContract
+# time lock smart contract
 This smart contract contract is meant for demonstration and testing purposes only. It runs on Ethereum and serves to lock funds for a user-defined period of time before they can be retrieved again.
 
 The contract can be used with [geth](https://github.com/ethereum/go-ethereum/wiki/geth) as follows:
