@@ -1,17 +1,17 @@
 # time lock smart contract
-This smart contract contract is meant for demonstration and testing purposes only. It runs on Ethereum and serves to lock funds for a user-defined period of time before they can be retrieved again.
+This smart contract contract is meant for demonstration and testing purposes only. It runs on Ethereum and serves to lock funds for a user-defined period of time before they can be retrieved.
 
 The contract can be used with [geth](https://github.com/ethereum/go-ethereum/wiki/geth) as follows:
 
-We start geth via
+Start geth via
 
 `geth console`
 
-Since this will keep synchronyzing the blockchain and produce a lot of output we might want to open a second geth session for working and testing without lots of background information:
+Since this will keep synchronyzing the blockchain and produce a lot of output open a second geth session for working and testing without lots of background information:
 
 `geth attach`
 
-All following commands should be entered into this javascript shell provided by geth. Remove the linebreaks from the Solidity source code, you can do so with some [online tool](http://www.textfixer.com/tools/remove-line-breaks.php) and store the source in a variable. Alternatively, copy-paste the content of the corresponding file in this repository into the parentheses below:
+All following commands should be entered into this javascript shell provided by geth. Remove the linebreaks from the Solidity source code, you can do so with some [online tool](http://www.textfixer.com/tools/remove-line-breaks.php) and store the source in a variable. Alternatively, copy-paste the content of the corresponding file from this repository into the parentheses below:
 
 `var source = 'contract LockTimeContract { struct accountData { uint balance; uint releaseTime; } mapping (address => accountData) accounts; function payIn(uint lockTimeS) { uint amount = msg.value; payOut(); if (accounts[msg.sender].balance > 0) msg.sender.send(msg.value); else { accounts[msg.sender].balance = amount; accounts[msg.sender].releaseTime = now + lockTimeS; } } function payOut() { if (accounts[msg.sender].balance != 0 && accounts[msg.sender].releaseTime < now) { msg.sender.send(accounts[msg.sender].balance); accounts[msg.sender].balance = 0; accounts[msg.sender].releaseTime = 0; } } function getMyLockedFunds() constant returns (uint x) { return accounts[msg.sender].balance; } function getMyLockedFundsReleaseTime() constant returns (uint x) { return accounts[msg.sender].releaseTime; } function getNow() constant returns (uint x) { return now; } }'`
 
