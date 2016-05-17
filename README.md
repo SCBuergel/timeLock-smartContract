@@ -27,6 +27,13 @@ Deploy an instance of this contract to the blockchain, this will prompt for the 
 
 `var contractInstance = contract.new({from:web3.eth.accounts[0], data: compiled.LockTimeContract.code, gas: 1000000})`
 
+Should you already have this contract on the blockchain (and kept a copy of the ABI definition) you can create an instance of that already deployed contract. In that case you also save gas for deploying the contract and do not spam the blockchain with endless contract re-creations. Replace `ABI` and `address` in the code snipped below with values which you obtained during the initial contract deployment: 
+
+```
+var contract = web3.eth.contract(ABI);
+var contractInstance = MyContract.at(address);
+```
+
 This contract has to get mined which might take up to a minute (you can watch your primary geth session to watch for incoming blocks), it has been mined once we see an address:
 
 `contractInstance.address`
