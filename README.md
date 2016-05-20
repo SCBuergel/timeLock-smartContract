@@ -31,7 +31,7 @@ Should you already have this contract on the blockchain (and kept a copy of the 
 
 ```
 var contract = web3.eth.contract(ABI);
-var contractInstance = MyContract.at(address);
+var contractInstance = contract.at(address);
 ```
 
 This contract has to get mined which might take up to a minute (you can watch your primary geth session to watch for incoming blocks), it has been mined once we see an address:
