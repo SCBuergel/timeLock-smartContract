@@ -1,8 +1,6 @@
-contract timeLock
-{
+contract TimeLock {
     // custom data structure to hold locked funds and time
-    struct accountData
-    {
+    struct accountData {
         uint balance;
         uint releaseTime;
     }
@@ -10,8 +8,7 @@ contract timeLock
     // only one locked account per address
     mapping (address => accountData) accounts;
 
-    function payIn(uint lockTimeS)
-    {
+    function payIn(uint lockTimeS) payable {
         // send some amount (in Wei) when calling this function.
         // the amount will then be placed in a locked account
         // the funds will be released once the indicated lock time in seconds
@@ -23,17 +20,15 @@ contract timeLock
         payOut();
         if (accounts[msg.sender].balance > 0)
             msg.sender.send(msg.value);
-        else
-        {
+        else {
             accounts[msg.sender].balance = amount;
             accounts[msg.sender].releaseTime = now + lockTimeS;
         }
     }
     
-    function payOut()
-    {   // check if user has funds due for pay out because lock time is over
-        if (accounts[msg.sender].balance != 0 && accounts[msg.sender].releaseTime < now)
-        {
+    function payOut() {
+        // check if user has funds due for pay out because lock time is over
+        if (accounts[msg.sender].balance != 0 && accounts[msg.sender].releaseTime < now) {
             msg.sender.send(accounts[msg.sender].balance);
             accounts[msg.sender].balance = 0;
             accounts[msg.sender].releaseTime = 0;
@@ -41,18 +36,15 @@ contract timeLock
     }
 
     // some helper functions for demo purposes (not required)
-    function getMyLockedFunds() constant returns (uint x)
-    {
+    function getMyLockedFunds() constant returns (uint x) {
         return accounts[msg.sender].balance;
     }
     
-    function getMyLockedFundsReleaseTime() constant returns (uint x)
-    {
+    function getMyLockedFundsReleaseTime() constant returns (uint x) {
 	    return accounts[msg.sender].releaseTime;
     }
 
-    function getNow() constant returns (uint x)
-    {
+    function getNow() constant returns (uint x) {
         return now;
     }
 }
