@@ -15,19 +15,10 @@ Since this will keep synchronyzing the blockchain and produce a lot of output op
 geth attach
 ```
 
-All following commands should be entered into this javascript shell provided by geth. Remove the linebreaks from the Solidity source code, you can do so with some [online tool](http://www.textfixer.com/tools/remove-line-breaks.php) and store the source in a variable. Alternatively, copy-paste the content of the corresponding file from this repository into the parentheses below:
-
+Compile the sourcode of the smart contract via [Remix](https://remix.ethereum.org) and copy-paste the `Web3 deploy` output into a textfile that we call `w3script.sh`. You find that output in the `Contract` tab (top right) in Remix after clicking `Create` you can open the additional information `Contract details (bytecode, interface etc.)` and from there copy the output listed as `Web3 deploy` into the textfile. This output is by default assuming you are deploying from account `web3.eth.accounts[0]`, if you want to choose a different account, change the account number accordingly. Before deploying the contract (which is broadcasted as a transaction), we need to unlock the account via `web3.personal.unlockAccount(web3.eth.accounts[0])`. Now we are ready to deploy the running the following command inside the geth web3 console:
 ```
-var source = 'contract timeLock { struct accountData { uint balance; uint releaseTime; } mapping (address => accountData) accounts; function payIn(uint lockTimeS) { uint amount = msg.value; payOut(); if (accounts[msg.sender].balance > 0) msg.sender.send(msg.value); else { accounts[msg.sender].balance = amount; accounts[msg.sender].releaseTime = now + lockTimeS; } } function payOut() { if (accounts[msg.sender].balance != 0 && accounts[msg.sender].releaseTime < now) { msg.sender.send(accounts[msg.sender].balance); accounts[msg.sender].balance = 0; accounts[msg.sender].releaseTime = 0; } } function getMyLockedFunds() constant returns (uint x) { return accounts[msg.sender].balance; } function getMyLockedFundsReleaseTime() constant returns (uint x) { return accounts[msg.sender].releaseTime; } function getNow() constant returns (uint x) { return now; } }'
+loadScript('w3script.sh')
 ```
-
-Compile the solidity source via the integrated solidity compiler:
-
-```
-var compiled = web3.eth.compile.solidity(source)
-```
-
-Take the compiled object and make a new contract from it:
 
 ```
 var contract = web3.eth.contract(compiled.timeLock.info.abiDefinition)
