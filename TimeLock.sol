@@ -43,7 +43,7 @@ contract TimeLock {
     }
     
     function getMyLockedFundsReleaseTime() public view returns (uint x) {
-	    return accounts[msg.sender].releaseTime;
+        return accounts[msg.sender].releaseTime;
     }
 
     function getNow() public view returns (uint x) {
