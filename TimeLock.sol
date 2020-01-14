@@ -1,3 +1,5 @@
+pragma solidity ^0.5.16;
+
 contract TimeLock {
     // custom data structure to hold locked funds and time
     struct accountData {
@@ -8,7 +10,7 @@ contract TimeLock {
     // only one locked account per address
     mapping (address => accountData) accounts;
 
-    function payIn(uint lockTimeS) payable {
+    function payIn(uint lockTimeS) public payable {
         // send some amount (in Wei) when calling this function.
         // the amount will then be placed in a locked account
         // the funds will be released once the indicated lock time in seconds
@@ -19,32 +21,32 @@ contract TimeLock {
         uint amount = msg.value;
         payOut();
         if (accounts[msg.sender].balance > 0)
-            msg.sender.send(msg.value);
+            msg.sender.transfer(msg.value);
         else {
             accounts[msg.sender].balance = amount;
             accounts[msg.sender].releaseTime = now + lockTimeS;
         }
     }
     
-    function payOut() {
+    function payOut() public {
         // check if user has funds due for pay out because lock time is over
         if (accounts[msg.sender].balance != 0 && accounts[msg.sender].releaseTime < now) {
-            msg.sender.send(accounts[msg.sender].balance);
+            msg.sender.transfer(accounts[msg.sender].balance);
             accounts[msg.sender].balance = 0;
             accounts[msg.sender].releaseTime = 0;
         }
     }
 
     // some helper functions for demo purposes (not required)
-    function getMyLockedFunds() constant returns (uint x) {
+    function getMyLockedFunds() public view returns (uint x) {
         return accounts[msg.sender].balance;
     }
     
-    function getMyLockedFundsReleaseTime() constant returns (uint x) {
+    function getMyLockedFundsReleaseTime() public view returns (uint x) {
 	    return accounts[msg.sender].releaseTime;
     }
 
-    function getNow() constant returns (uint x) {
+    function getNow() public view returns (uint x) {
         return now;
     }
 }
